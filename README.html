@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Monthsary Surprise 💌</title>
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: pink;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+h1 { color: #ff4b7c; margin-bottom: 20px; }
+
+/* Floating hearts */
+.heart { position: absolute; font-size: 24px; animation: float 5s linear infinite; }
+@keyframes float { 0% { transform: translateY(100vh) rotate(0deg); opacity: 0;} 10% { opacity: 1;} 100% { transform: translateY(-10vh) rotate(360deg); opacity: 0;} }
+
+/* Password screen */
+#password-screen { text-align: center; }
+#pw-input { font-size: 20px; text-align: center; border-radius: 10px; padding: 8px; width: 150px; margin-bottom: 15px; border: 2px solid #ff4b7c; }
+.heart-btn { width: 60px; height: 60px; background: #ff7fae; border-radius: 50%; border: none; margin: 5px; font-size: 22px; color: white; cursor: pointer; transition: transform 0.2s; }
+.heart-btn:hover { transform: scale(1.2); }
+
+/* Envelope screen */
+#envelope-screen { display: none; text-align: center; position: relative; margin-top: 20px; }
+.envelope-container { position: relative; width: 200px; height: 120px; margin: 20px auto; perspective: 600px; }
+.envelope { width: 200px; height: 120px; position: relative; }
+.envelope .body { width: 200px; height: 120px; background: #ffb6c1; border-radius: 8px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+.envelope .flap { width: 0; height: 0; border-left: 100px solid transparent; border-right: 100px solid transparent; border-bottom: 60px solid #ff91b8; position: absolute; top: 0; left: 0; transform-origin: top center; transition: transform 1s; z-index: 2; }
+
+/* Letter */
+#letter { width: 180px; background: #fff0f5; padding: 10px; border-radius: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); display: none; margin: 10px auto 0 auto; font-size: 16px; color: #ff4b7c; text-align: left; }
+
+/* Flap open */
+.envelope.open .flap { transform: rotateX(-180deg); }
+
+/* Open button */
+#open-btn { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); background: #ff91b8; color: white; padding: 8px 20px; border: none; border-radius: 25px; font-size: 16px; cursor: pointer; z-index: 3; }
+
+/* Falling hearts */
+.falling-heart { position: absolute; font-size: 24px; animation: fall 4s linear infinite; }
+@keyframes fall { 0% { transform: translateY(-10px) rotate(0deg); opacity: 0;} 20% { opacity: 1;} 100% { transform: translateY(100vh) rotate(360deg); opacity: 0;} }
+</style>
+</head>
+<body>
+
+<h1>Happy Monthsary! 💖</h1>
+
+<!-- PASSWORD SCREEN -->
+<div id="password-screen">
+    <input type="password" id="pw-input" readonly placeholder="Enter password">
+    <br>
+    <div>
+        <button class="heart-btn" onclick="press(1)">1</button>
+        <button class="heart-btn" onclick="press(2)">2</button>
+        <button class="heart-btn" onclick="press(3)">3</button>
+        <button class="heart-btn" onclick="press(4)">4</button>
+        <button class="heart-btn" onclick="press(5)">5</button>
+        <button class="heart-btn" onclick="press(6)">6</button>
+        <button class="heart-btn" onclick="press(7)">7</button>
+        <button class="heart-btn" onclick="press(8)">8</button>
+        <button class="heart-btn" onclick="press(9)">9</button>
+        <button class="heart-btn" onclick="press(0)">0</button>
+        <button class="heart-btn" onclick="clearPW()">C</button>
+    </div>
+</div>
+
+<!-- ENVELOPE SCREEN -->
+<div id="envelope-screen">
+    <div class="envelope-container">
+        <div class="envelope">
+            <div class="flap"></div>
+            <div class="body"></div>
+        </div>
+        <button id="open-btn" onclick="openEnvelope()">Open 💌</button>
+    </div>
+    <div id="letter">
+        hi baby happy motmot day saken 3 months na tayo soon mag kikita rin tayo and nag papasalamat ako na dumating ka sa buhay ko andami kong natutunan dahil sayo ikaw ang lakas ko sa araw araw number 1 basher top 1 fan ikaw ang kalaban ko at kakampi kumbaga ikaw ang kahinaan ko at lakas ko ng dahil sayo mas lumiwanag ang buhay ko mas mag pupursigi ako sa buhay para sayo gagawin ko ang lahat ng makakaya ko para mag kita na tayo at maibigay ko sayo lahat ng dahil sayo ang daming nag bago saken, baby salamat sa araw araw mong pinaparamdam saken ng dahil sayo natutu akong lumaban, eto lang ang message ko baby hehe sana magustuhan mo I love you so much baby ko😘
+    </div>
+</div>
+
+<!-- Music -->
+<audio id="song" src="ENCHANTED_BY_TAYLOR_SWIFT.mp3" autoplay loop></audio>
+
+<script>
+// Floating hearts
+function createHeart(){
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.innerText = '💖';
+    heart.style.left = Math.random() * window.innerWidth + 'px';
+    heart.style.animationDuration = 3 + Math.random()*5 + 's';
+    document.body.appendChild(heart);
+    setTimeout(()=>{ heart.remove(); }, 5000);
+}
+setInterval(createHeart, 500);
+
+// Password logic
+let pw = "";
+const correctPW = "121325";
+
+function press(num){
+    pw += num;
+    document.getElementById("pw-input").value = pw;
+    if(pw.length >= correctPW.length){
+        if(pw === correctPW){
+            document.getElementById("password-screen").style.display = "none";
+            document.getElementById("envelope-screen").style.display = "block";
+            startFallingHearts();
+        } else {
+            alert("Wrong password 😢");
+            pw = "";
+            document.getElementById("pw-input").value = "";
+        }
+    }
+}
+function clearPW(){
+    pw = "";
+    document.getElementById("pw-input").value = "";
+}
+
+// Envelope open logic
+function openEnvelope(){
+    const envelope = document.querySelector('.envelope');
+    const letter = document.getElementById('letter');
+    const btn = document.getElementById('open-btn');
+    envelope.classList.add('open');
+    btn.style.display = 'none'; // Remove button
+    setTimeout(()=>{ letter.style.display = 'block'; }, 1000);
+}
+
+// Falling hearts
+function startFallingHearts(){
+    setInterval(()=>{
+        const heart = document.createElement('div');
+        heart.className = 'falling-heart';
+        heart.innerText = '💖';
+        heart.style.left = Math.random()*window.innerWidth + 'px';
+        heart.style.fontSize = (15+Math.random()*20)+'px';
+        document.body.appendChild(heart);
+        setTimeout(()=>{ heart.remove(); }, 4000);
+    }, 500);
+}
+</script>
+</body>
+</html>
